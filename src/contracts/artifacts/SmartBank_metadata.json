@@ -6,6 +6,11 @@
 	"output": {
 		"abi": [
 			{
+				"inputs": [],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
 				"anonymous": false,
 				"inputs": [
 					{
@@ -151,6 +156,19 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "getBalanceOfBank",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -171,6 +189,19 @@
 			{
 				"inputs": [
 					{
+						"internalType": "uint32",
+						"name": "percentage",
+						"type": "uint32"
+					}
+				],
+				"name": "setFee",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "uint256",
 						"name": "value",
 						"type": "uint256"
@@ -184,6 +215,19 @@
 			{
 				"inputs": [],
 				"name": "withdrawAll",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "value",
+						"type": "uint256"
+					}
+				],
+				"name": "withdrawFees",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -217,11 +261,11 @@
 	},
 	"sources": {
 		"src/contracts/SmartBank.sol": {
-			"keccak256": "0x97ceafb2ff79fccb370f3bc2805fa0d6bdaf8ed2729a490e25900a9a04389439",
+			"keccak256": "0x2ef6aebaf8f977b22b0c91d6717f7fe28dc1a296a72d96e9c70111c0c7ce737e",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://3c5d76963421e8acb21d8c804f440708d584f008410d08847c3ec9a459a837c8",
-				"dweb:/ipfs/QmTgiXrbbEKB2SRLTnftYJzrjBR4KJsZ16TVhjZZ8BgW9b"
+				"bzz-raw://f27f16f6266620b24c4afa33d8c23ba3e088c749fa1bbf0b1f2f9362aa2183f7",
+				"dweb:/ipfs/Qma9QMEbuEbxfee2Yh6RxyFTnZHt3s9UfcmP3txgWCbpHb"
 			]
 		}
 	},
