@@ -111,7 +111,7 @@ contract Ethernium {
         require(net > 0, "Net is zero");
 
         // Credita a taxa de 0.5% ao cofre do contrato
-        _creditContractVault(token, msg.value);
+        _creditContractVault(token, fee);
 
         // Credita apenas o líquido ao Vault do usuário
         _credit(msg.sender, token, net);

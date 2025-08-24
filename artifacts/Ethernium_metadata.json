@@ -257,11 +257,11 @@
 			]
 		},
 		"src/contracts/Ethernium.sol": {
-			"keccak256": "0xf95667a98fc2412f7edbb598dc155f51261ef0e9c3de777214c77a072c8d2803",
+			"keccak256": "0xb9509c8c8fafa996f7e888152172896f57441797c2d93fd0116341784c0acfef",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://c83c22794fe9a50fb8dc70222399729caca05dc7a4195301f6171a79a8c910e0",
-				"dweb:/ipfs/QmXZ43a51CAQ47N2XBQcjj2miCv2ULXJQD3Ea3XRD1LYo3"
+				"bzz-raw://19565644d5e4606ec4493e8c78de5c70c5170b42214dea49d2d5cb2bfb7291fe",
+				"dweb:/ipfs/QmaUVmc5piEjNsQzi3jNgMEZkqNPZf54otSh6XfmvYcx3K"
 			]
 		}
 	},
