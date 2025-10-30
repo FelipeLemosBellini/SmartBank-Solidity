@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 contract Ethernium {
-    uint256 private constant CREATION_FEE = 100000000000000;
+    using SafeERC20 for IERC20;
 
+    uint256 private constant CREATION_FEE = 100000000000000;
+    //0x5eEe7963108A2F14F498862F02E5c9D33004f728
     // Taxa de depósito: 0.5% (expressa em basis points = 50 bps)
     uint16 private constant DEPOSIT_FEE_BPS = 50; // 50/10000 = 0.50%
     uint16 private constant BPS_DENOMINATOR = 10000;
@@ -89,36 +91,29 @@ contract Ethernium {
 
     // Desabilita recebimento direto para garantir a cobrança da taxa de 0.5%
     receive() external payable {
-        revert("Use depositETH");
+        revert("Don't do it!");
     }
 
     // Depositar um token ERC-20:
     // - Exige já ter criado o cofre (e pago a taxa).
     // - Requer approve prévio para 'amount' (quantidade bruta a transferir).
     // - Retem 0.5% no contrato e credita 99.5% no Vault.
-    function depositERC20(address token, uint256 amount) external payable {
-        require(vaultCreatedAndPaid[msg.sender], "Create vault first");
-        require(token != address(0), "Invalid token");
-        require(amount > 0, "Amount must be > 0");
-        _ensureVault(msg.sender);
+   function depositERC20(address token, uint256 amount) external payable {
+    require(vaultCreatedAndPaid[msg.sender], "Create vault first");
+    require(token != address(0), "Invalid token");
+    require(amount > 0, "Amount must be > 0");
 
-        // Transfere a quantidade bruta para o contrato
-        bool ok = IERC20(token).transferFrom(msg.sender, address(this), amount);
-        require(ok, "transferFrom failed");
+    IERC20 _erc20 = IERC20(token);
+    _erc20.safeTransferFrom(msg.sender, address(this), amount); // Reverts on failure
 
-        uint256 fee = (amount * DEPOSIT_FEE_BPS) / BPS_DENOMINATOR;
-        uint256 net = amount - fee;
-        require(net > 0, "Net is zero");
+    uint256 fee = (amount * DEPOSIT_FEE_BPS) / BPS_DENOMINATOR;
+    uint256 net = amount - fee;
+    require(net > 0, "Net is zero");
 
-        // Credita a taxa de 0.5% ao cofre do contrato
-        _creditContractVault(token, fee);
-
-        // Credita apenas o líquido ao Vault do usuário
-        _credit(msg.sender, token, net);
-
-        // A taxa (fee) permanece dentro do contrato em forma do próprio token
-        emit Deposit(msg.sender, token, amount, fee, net);
-    }
+    _creditContractVault(token, fee); // Credit fee to contract
+    _credit(msg.sender, token, net);  // Credit net to user
+    emit Deposit(msg.sender, token, amount, fee, net);
+}
 
     // Retorna a visão completa do cofre de um usuário específico
     function myVault() public view returns (VaultView memory v) {
