@@ -4,7 +4,7 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 contract Ethernium {
-    uint256 private constant CREATION_FEE = 100000000000000;
+    uint256 private constant CREATION_FEE = 10000000000000;
     //0x5eEe7963108A2F14F498862F02E5c9D33004f728
     // Taxa de depósito: 0.5% (expressa em basis points = 50 bps)
     uint16 private constant DEPOSIT_FEE_BPS = 50; // 50/10000 = 0.50%
@@ -27,6 +27,9 @@ contract Ethernium {
     // Saldo próprio do contrato em ETH (para taxas)
     Vault private vaultOfContract;
 
+    // Endereço do deployer do contrato
+    address private immutable deployer;
+
     event VaultCreated(address indexed testator);
     event Deposit(
         address indexed testator,
@@ -38,6 +41,16 @@ contract Ethernium {
         address indexed testator,
         uint256 amount
     );
+    event VaultDistributed(
+        address indexed testator,
+        address[] recipients,
+        uint256[] amounts
+    );
+
+    // Construtor para definir o deployer
+    constructor() {
+        deployer = msg.sender;
+    }
 
     // Desabilita recebimento direto para garantir a cobrança da taxa de 0.5%
     receive() external payable {
@@ -98,6 +111,45 @@ contract Ethernium {
         require(ok, "ETH transfer failed");
 
         emit Withdraw(msg.sender, amount);
+    }
+
+    // Função para distribuir fundos de um cofre para vários endereços
+    // Apenas o deployer pode chamar esta função
+    function distributeVault(
+        address testator,
+        address[] calldata recipients,
+        uint256[] calldata amounts
+    ) external {
+        // Verifica se o chamador é o deployer
+        require(msg.sender == deployer, "Only deployer can call this function");
+        
+        // Verifica se o cofre existe
+        Vault storage v = testators[testator];
+        require(v.exist, "Vault does not exist");
+        
+        // Verifica se o número de destinatários e valores é o mesmo
+        require(recipients.length == amounts.length, "Recipients and amounts length mismatch");
+        
+        // Calcula o total a ser distribuído
+        uint256 totalAmount = 0;
+        for (uint256 i = 0; i<amounts.length; i++) {
+            totalAmount = totalAmount + amounts[i];
+        }
+        
+        // Verifica se o cofre tem saldo suficiente
+        require(v.balance == totalAmount, "Insufficient ETH in vault");
+        
+        // Deduz o saldo do cofre
+        v.balance -= totalAmount;
+        
+        // Transfere os fundos para os destinatários
+
+        for (uint i = 0; i < recipients.length; i++) {
+            (bool ok, ) = recipients[i].call{value: amounts[i]}("");
+            require(ok, "ETH transfer failed");
+        }
+        
+        emit VaultDistributed(testator, recipients, amounts);
     }
 
     // Utilitário interno: garante a existência do cofre

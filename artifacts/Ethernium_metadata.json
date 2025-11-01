@@ -6,6 +6,11 @@
 	"output": {
 		"abi": [
 			{
+				"inputs": [],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
 				"anonymous": false,
 				"inputs": [
 					{
@@ -60,6 +65,31 @@
 					},
 					{
 						"indexed": false,
+						"internalType": "address[]",
+						"name": "recipients",
+						"type": "address[]"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256[]",
+						"name": "amounts",
+						"type": "uint256[]"
+					}
+				],
+				"name": "VaultDistributed",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "testator",
+						"type": "address"
+					},
+					{
+						"indexed": false,
 						"internalType": "uint256",
 						"name": "amount",
 						"type": "uint256"
@@ -80,6 +110,29 @@
 				"name": "depositETH",
 				"outputs": [],
 				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "testator",
+						"type": "address"
+					},
+					{
+						"internalType": "address[]",
+						"name": "recipients",
+						"type": "address[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "amounts",
+						"type": "uint256[]"
+					}
+				],
+				"name": "distributeVault",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -196,11 +249,11 @@
 			]
 		},
 		"src/contracts/Ethernium-eth.sol": {
-			"keccak256": "0x1075945a882f1b414f05f1826d7e1ab0f55723c10961ae631fbd1ec8e849d886",
+			"keccak256": "0x8d3c3606219b167889bb9d44cdc01179298874349e124d91ce7681d613e8db93",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://758ed4735baf29a43110728c845b11367f29e2c7a7caba8037244d770a2f0c49",
-				"dweb:/ipfs/QmVkCe9nFXHMcMWiywAgiK4pgtYULCdYxLtKn7jSR7ozqR"
+				"bzz-raw://dc65f05ca43277e98395afe750b60cd608510f59fdedc3e7293e61d5b6c869cd",
+				"dweb:/ipfs/QmT3WE1LKFwZNWAfLeXP9AQWBhY6jxHDb8M95iixm4AWc7"
 			]
 		}
 	},
