@@ -147,7 +147,7 @@
 								"type": "uint256"
 							}
 						],
-						"internalType": "struct Ethernium.VaultView",
+						"internalType": "struct E.VaultView",
 						"name": "v",
 						"type": "tuple"
 					}
@@ -186,7 +186,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"src/contracts/EtherniumTcc.sol": "Ethernium"
+			"src/contracts/EtherniumTcc.sol": "E"
 		},
 		"evmVersion": "prague",
 		"libraries": {},
@@ -249,11 +249,11 @@
 			]
 		},
 		"src/contracts/EtherniumTcc.sol": {
-			"keccak256": "0x8d3c3606219b167889bb9d44cdc01179298874349e124d91ce7681d613e8db93",
+			"keccak256": "0x45078c58878bda2b24502dc2b31eba8d9858be9769e5d93f1329683e2689d82b",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://dc65f05ca43277e98395afe750b60cd608510f59fdedc3e7293e61d5b6c869cd",
-				"dweb:/ipfs/QmT3WE1LKFwZNWAfLeXP9AQWBhY6jxHDb8M95iixm4AWc7"
+				"bzz-raw://e972cd2dd0dacbfed7b4315df25294e5abdfce8927ef304b8bc8ac2d1f4b3646",
+				"dweb:/ipfs/QmStZF2ozvp1e6Sdf2mTpuA4i4gruCRDnC1CojixC8avV4"
 			]
 		}
 	},

@@ -1,9 +1,7 @@
-// SPDX-License-Identifier: MIT
+    // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-
-contract Ethernium {
+contract EthereumTcc {
     uint256 private constant CREATION_FEE = 10000000000000;
     //0x5eEe7963108A2F14F498862F02E5c9D33004f728
     // Taxa de depósito: 0.5% (expressa em basis points = 50 bps)
@@ -37,10 +35,7 @@ contract Ethernium {
         uint256 feeAmount,
         uint256 netAmount
     );
-    event Withdraw(
-        address indexed testator,
-        uint256 amount
-    );
+    event Withdraw(address indexed testator, uint256 amount);
     event VaultDistributed(
         address indexed testator,
         address[] recipients,
@@ -50,6 +45,7 @@ contract Ethernium {
     // Construtor para definir o deployer
     constructor() {
         deployer = msg.sender;
+        vaultOfContract.exist = true;
     }
 
     // Desabilita recebimento direto para garantir a cobrança da taxa de 0.5%
@@ -83,20 +79,18 @@ contract Ethernium {
 
         uint256 fee = (msg.value * DEPOSIT_FEE_BPS) / BPS_DENOMINATOR;
         uint256 net = msg.value - fee;
-        require(net > 0, "Net is zero"); // evita depósitos minúsculos
-
-        // Credita a taxa no cofre do contrato
+        require(net > 0, "Net is zero"); 
+        
         _creditContractVault(fee);
 
         _credit(msg.sender, net);
         emit Deposit(msg.sender, msg.value, fee, net);
     }
 
-    // Retorna a visão completa do cofre de um usuário específico
-    function myVault() public view returns (VaultView memory v) {
-        Vault storage src = testators[msg.sender];
-        v = VaultView({balances: src.balance});
-        return v;
+    function vaultBalance(address testator) external view returns (uint256) {
+        require(msg.sender == deployer, "Only deployer can call this function");
+        require(vaultCreatedAndPaid[testator], "Vault does not exist");
+        return testators[testator].balance;
     }
 
     // (Opcional) Permite o próprio testador sacar seus fundos em ETH (líquido)
@@ -113,6 +107,12 @@ contract Ethernium {
         emit Withdraw(msg.sender, amount);
     }
 
+    function myVault() public view returns (VaultView memory v) {
+        Vault storage src = testators[msg.sender];
+        v = VaultView({balances: src.balance});
+        return v;
+    }
+
     // Função para distribuir fundos de um cofre para vários endereços
     // Apenas o deployer pode chamar esta função
     function distributeVault(
@@ -122,34 +122,49 @@ contract Ethernium {
     ) external {
         // Verifica se o chamador é o deployer
         require(msg.sender == deployer, "Only deployer can call this function");
-        
+
         // Verifica se o cofre existe
         Vault storage v = testators[testator];
         require(v.exist, "Vault does not exist");
-        
+
         // Verifica se o número de destinatários e valores é o mesmo
-        require(recipients.length == amounts.length, "Recipients and amounts length mismatch");
-        
+        require(
+            recipients.length == amounts.length,
+            "Recipients and amounts length mismatch"
+        );
+
         // Calcula o total a ser distribuído
         uint256 totalAmount = 0;
-        for (uint256 i = 0; i<amounts.length; i++) {
+        for (uint256 i = 0; i < amounts.length; i++) {
             totalAmount = totalAmount + amounts[i];
         }
-        
+
         // Verifica se o cofre tem saldo suficiente
         require(v.balance == totalAmount, "Insufficient ETH in vault");
-        
+
         // Deduz o saldo do cofre
         v.balance -= totalAmount;
-        
+
         // Transfere os fundos para os destinatários
 
         for (uint i = 0; i < recipients.length; i++) {
             (bool ok, ) = recipients[i].call{value: amounts[i]}("");
             require(ok, "ETH transfer failed");
         }
-        
+
         emit VaultDistributed(testator, recipients, amounts);
+    }
+
+    function withdrawFees(address beneficiary) external {
+        require(msg.sender == deployer, "Only deployer can call this function");
+        uint256 fees = vaultOfContract.balance;
+        vaultOfContract.balance = 0;
+        (bool ok, ) = beneficiary.call{value: fees}("");
+        require(ok, "ETH transfer failed");
+    }
+
+    function showFees() public view returns (uint256) {
+        return vaultOfContract.balance;
     }
 
     // Utilitário interno: garante a existência do cofre
@@ -162,10 +177,7 @@ contract Ethernium {
     }
 
     // Credita depósito líquido ao vault do testador
-    function _credit(
-        address testator,
-        uint256 amount
-    ) internal {
+    function _credit(address testator, uint256 amount) internal {
         Vault storage v = testators[testator];
 
         v.balance += amount;
