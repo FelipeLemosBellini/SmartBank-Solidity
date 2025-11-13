@@ -3,7 +3,6 @@ pragma solidity ^0.8.20;
 
 contract EthereumTcc {
     uint256 private constant CREATION_FEE = 10000000000000;
-    //0x5eEe7963108A2F14F498862F02E5c9D33004f728
     // Taxa de depósito: 0.5% (expressa em basis points = 50 bps)
     uint16 private constant DEPOSIT_FEE_BPS = 50; // 50/10000 = 0.50%
     uint16 private constant BPS_DENOMINATOR = 10000;
@@ -165,6 +164,10 @@ contract EthereumTcc {
 
     function showFees() public view returns (uint256) {
         return vaultOfContract.balance;
+    }
+
+    function iHaveVault() public view returns (bool) {
+        return testators[msg.sender].exist;
     }
 
     // Utilitário interno: garante a existência do cofre

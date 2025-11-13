@@ -137,6 +137,19 @@
 			},
 			{
 				"inputs": [],
+				"name": "iHaveVault",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "myVault",
 				"outputs": [
 					{
@@ -246,11 +259,11 @@
 	},
 	"sources": {
 		"src/contracts/EtherniumTcc.sol": {
-			"keccak256": "0x51ecda3db612409f855fbf138c6105c794ccc90cc662b75ca2bdf9e66a17e15d",
+			"keccak256": "0xb9921a30ab063c584bbd12c705177f6f713e282e080d6e20fa19cea802ef8086",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://09dde9b95be2c603c015fb45a5801d8fcb2400722b7daeb0509e5c628dd33b5c",
-				"dweb:/ipfs/QmVSfV3w886qMPmUmEiGSowkw8UgjutPCCiA9M48HoLBY8"
+				"bzz-raw://4ecf9cc76fe3fb3922b307eebad5aa9f8c4b440cc7be5efa8dbc258ed704b5d9",
+				"dweb:/ipfs/QmfFpXmoeQEXK3FEgd4gqTV9a2Cjia7VukGxxpzNRyZgZn"
 			]
 		}
 	},
